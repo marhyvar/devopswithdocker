@@ -1,0 +1,2 @@
+docker container run -d -v $(pwd)/text.log:/usr/src/app/text.log devopsdockeruh/simple-web-service
+# first I had to locally create the text.log file inside the current directory, otherwise it would have created a directory named text.log
