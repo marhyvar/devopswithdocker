@@ -1,0 +1,2 @@
+The url in which the released application is:
+http://practise-docker-app.herokuapp.com/
