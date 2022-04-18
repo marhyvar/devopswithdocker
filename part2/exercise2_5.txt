@@ -1,0 +1,18 @@
+scaling-exercise $ docker-compose up -d --scale compute=3
+Starting scaling-exercise_compute_1 ... done
+Starting load-balancer              ... done
+Starting calculator                 ... done
+Creating scaling-exercise_compute_2 ... done
+Creating scaling-exercise_compute_3 ... done
+scaling-exercise $ docker-compose down
+Stopping scaling-exercise_compute_3 ... done
+Stopping scaling-exercise_compute_2 ... done
+Stopping load-balancer              ... done
+Stopping scaling-exercise_compute_1 ... done
+Stopping calculator                 ... done
+Removing scaling-exercise_compute_3 ... done
+Removing scaling-exercise_compute_2 ... done
+Removing load-balancer              ... done
+Removing scaling-exercise_compute_1 ... done
+Removing calculator                 ... done
+Removing network scaling-exercise_default
