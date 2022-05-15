@@ -1,0 +1,9 @@
+I changed backend's environment variable REQUEST_ORIGIN from
+http://localhost:5000 to http://localhost
+Otherwise, there would have been a Cross-Origin Request error:
+CORS header ‘Access-Control-Allow-Origin’ missing
+(different port, thus different origin).
+So, when using nginx http://localhost needs to pass through the cors check. 
+I changed frontend's REACT_APP_BACKEND_URL from
+http://localhost:8080 to http://localhost/api
+Also, I named backend and frontend containers for convenience.
