@@ -1,0 +1,70 @@
+I added a Dockerfile for my old nodejs backend project and a helpful docker-compose.yml
+that sets up a postgres database for the backend as well as runs the backend in a container.
+No more tedious local postgres setup!
+The project can be found at https://github.com/marhyvar/greeting-card-texts-api
+I added nodemon as a development dependency in order to restart the app if changes occur.
+I added a volume to allow the contents of the container to be modified locally.
+I also tried the node magic shown in the course materials with a volume, that
+ensures that the dependencies built for the image are not available locally.
+When trying the postgres connection I found a bug in my code. Due to deploying the
+project to Heroku, I had messed up my local database connection.
+I had to fix that as well in order to connect to the containerized postgres database.
+Looking at the network tab and logging the server 500 error helped me find the bug.
+For postgres I used a volume to set up the database initialization inside the container's
+docker-entrypoint-initdb.d directory. I also defined a volume for the database files.
+I used the environment variable PGDATA to create a subdirectory for the database files
+as was recommended in the postgres image documentation.
+
+Here is the Dockerfile:
+
+FROM node:16
+
+WORKDIR /usr/src/app
+
+COPY package* ./
+
+RUN npm install
+
+********************************
+
+And here is the docker-compose.yml:
+
+version: '3.8'
+
+services:
+  backend-dev-env:
+    build: .
+    command: npm run dev
+    depends_on:
+      - db
+    ports: 
+      - 3002:3002
+    environment:
+      NODE_ENV: dev
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: postgres
+    links:
+      - db
+    volumes:
+      - ./:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    container_name: backend-dev-env
+  db:
+    image: postgres:13.2-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/db_files
+    container_name: postgres_for_dev
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./database:/var/lib/postgresql/data/db_files
+volumes:
+  node_modules:
+
+****************************************************************
